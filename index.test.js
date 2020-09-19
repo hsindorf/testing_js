@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-'use strict';
+"use strict";
 
 const { fetchTimezone, fetchTime, getFormattedTime } = require("./index");
 const { timezonePdt, timePdt } = require("./fixtures");
@@ -22,9 +22,21 @@ describe("Time application", () => {
       expect(timezone).toEqual("America/Los_Angeles");
     });
 
-    it("throws an error if the external api returns a non-2xx status code", async () => {});
+    it("throws an error if the external api returns a non-2xx status code", async () => {
+      nock(baseUrl).get("/ip").reply(500);
 
-    it("throws an error if the response doesn't contain the timezone", async () => {});
+      expect(fetchTimezone()).rejects.toThrowError(
+        "Request failed with status code 500"
+      );
+    });
+
+    it("throws an error if the response doesn't contain the timezone", async () => {
+      nock(baseUrl).get("/ip").reply(200, { message: "no timezone here" });
+
+      expect(fetchTimezone()).rejects.toThrowError(
+        "Response didnt contain the timezone"
+      );
+    });
   });
 
   describe("fetchTime gets the time from an external API", () => {

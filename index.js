@@ -5,13 +5,17 @@ const axios = require("axios");
 async function fetchTimezone() {
   const timezone = await axios.get("http://worldtimeapi.org/api/ip");
 
+  if (!timezone?.data?.timezone) {
+    throw Error("Response didnt contain the timezone");
+  }
+  
   return timezone.data.timezone;
 }
 
 async function fetchTime(timezone) {
   const time = await axios.get(
-    `http://worldtimeapi.org/api/timezone/${timezone}`
-  );
+      `http://worldtimeapi.org/api/timezone/${timezone}`
+    );
 
   return time.data.datetime;
 }
