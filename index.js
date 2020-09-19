@@ -3,21 +3,21 @@
 const axios = require("axios");
 
 async function fetchTimezone() {
-  const timezone = await axios.get("http://worldtimeapi.org/api/ip");
+  const response = await axios.get("http://worldtimeapi.org/api/ip");
 
-  if (!timezone?.data?.timezone) {
+  if (!response.data || !response.data.timezone) {
     throw Error("Response didnt contain the timezone");
   }
-  
-  return timezone.data.timezone;
+
+  return response.data.timezone;
 }
 
 async function fetchTime(timezone) {
-  const time = await axios.get(
-      `http://worldtimeapi.org/api/timezone/${timezone}`
-    );
+  const response = await axios.get(
+    `http://worldtimeapi.org/api/timezone/${timezone}`
+  );
 
-  return time.data.datetime;
+  return response.data.datetime;
 }
 
 async function getFormattedTime() {
